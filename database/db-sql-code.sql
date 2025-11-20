@@ -233,7 +233,7 @@ VALUES   (
 
 
 UPDATE inventory
-SET inv_description = REPLACE('Do you have 6 kids and like to go offroading? The Hummer gives you the small interiors with an engine to get you out of any muddy or rocky situation.', 'small interiors', 'a huge interior')
+SET inv_description = REPLACE(inv_description, 'small interiors', 'a huge interior')
 WHERE inv_id = 10;
 
 
