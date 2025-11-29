@@ -28,7 +28,6 @@ nav ul {
   justify-content: space-around;
   list-style: none;
   padding: 1rem;
-
 }
 h1 {
   font-size: 1.2rem;
@@ -127,7 +126,7 @@ h3 {
   background-color: #fff;
   border-radius: 16px;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
   color: #333;
 }
 
@@ -153,6 +152,177 @@ h3 {
 .vehicle-detail strong {
   color: #555;
 }
+
+login-box {
+  background-color: #09c;
+  padding: 20px;
+  max-width: 300px;
+  border-radius: 8px;
+  margin: 20px auto;
+  color: #fff;
+}
+
+.login-box form {
+  display: flex;
+  flex-direction: column;
+}
+
+.login-box input {
+  margin-bottom: 10px;
+  padding: 8px;
+  width: 100%;
+}
+
+.login-box button {
+  margin-top: 10px;
+  padding: 8px;
+}
+
+.password-rules {
+  font-size: 0.9em;
+}
+.login-box button[type="submit"] {
+  padding: 0.75rem;
+  border: none;
+  border-radius: 5px;
+  background-color: #007bff;
+  color: #fff;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+.form-container {
+  width: 380px;
+  margin: 60px auto;
+  padding: 30px;
+  background: #fff;
+  border-radius: 8px;
+  box-shadow: 0 0 12px rgba(0,0,0,0.15);
+}
+
+h1 {
+  text-align: center;
+  margin-bottom: 20px;
+  color: #333;
+}
+
+.flash-message {
+  background: #ffe6e6;
+  color: #a40000;
+  padding: 10px;
+  border-radius: 5px;
+  margin-bottom: 15px;
+  text-align: center;
+}
+
+label {
+  display: block;
+  margin-bottom: 6px;
+  color: #333;
+}
+
+input {
+  width: 100%;
+  padding: 10px;
+  margin-bottom: 16px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+}
+
+.password-wrapper {
+  position: relative;
+}
+
+.toggle-password-btn {
+  position: absolute;
+  right: 10px;
+  top: 8px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: #444;
+}
+
+.password-rules {
+  font-size: 0.9em;
+  color: #666;
+  margin-bottom: 16px;
+}
+
+.submit-btn {
+  width: 100%;
+  padding: 12px;
+  background: #304ffe;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.submit-btn:hover {
+  background: #1a35c5;
+}
+
+.login-link {
+  text-align: center;
+  margin-top: 15px;
+}
+
+/* Sign-up link */
+.login-links {
+  text-align: center;
+  margin-top: 20px;
+}
+
+.login-links a {
+  color: #fff;
+  text-decoration: underline;
+}
+
+.register-wrapper {
+  max-width: 450px;
+  margin: 20px auto;
+  background: #d1ecf1;
+  padding: 20px;
+  border: 2px solid #333;
+  border-radius: 6px;
+}
+
+.register-form {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.register-form input {
+  padding: 10px;
+  border: 2px solid #000;
+  border-radius: 3px;
+}
+
+.password-rules {
+  font-size: 0.85rem;
+  color: #444;
+}
+
+.submit-btn {
+  background: #0b5ed7;
+  color: white;
+  padding: 10px 20px;
+  border-radius: 20px;
+  cursor: pointer;
+  border: none;
+}
+
+#toggle-password {
+  border: 1px solid #333;
+  padding: 6px 12px;
+  border-radius: 15px;
+  width: fit-content;
+  cursor: pointer;
+}
+
+
 @media screen and (min-width: 38rem) {
   body {
     background-image: url("../images/site/small_check.jpg");
