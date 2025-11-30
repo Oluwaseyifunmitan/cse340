@@ -5,25 +5,18 @@
 /* ***********************
  * Require Statements
  *************************/
+const session = require("express-session");
+const pool = require("./database/");
 const express = require("express");
 const expressLayouts = require("express-ejs-layouts");
 const env = require("dotenv").config();
 const baseController = require("./controllers/baseController");
 const inventoryRoute = require("./routes/inventoryRoute");
-const accountRoute = require("./routes/accountRoute");
 const utilities = require("./utilities/index");
-const session = require("express-session");
-const pool = require("./database/");
+const bodyParser = require("body-parser");
 
 const app = express();
 const static = require("./routes/static");
-
-/* ***********************
- *View Engine and Templates
- *************************/
-app.set("view engine", "ejs");
-app.use(expressLayouts);
-app.set("layout", "./layouts/layout"); // not at views root
 
 /* ***********************
  * Middleware
@@ -40,6 +33,10 @@ app.use(
     name: "sessionId",
   })
 );
+
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: true })); // for parsing application/x-www-form-urlencoded
+
 // Express Messages Middleware
 app.use(require("connect-flash")());
 app.use(function (req, res, next) {
@@ -48,19 +45,28 @@ app.use(function (req, res, next) {
 });
 
 /* ***********************
+ *View Engine and Templates
+ *************************/
+app.set("view engine", "ejs");
+app.use(expressLayouts);
+app.set("layout", "./layouts/layout"); // not at views root
+/* ***********************
  * Routes
  *************************/
 app.use(static);
 // Index route
-app.get("/", utilities.handleErrors(baseController.buildHome))
-
+app.get("/", baseController.buildHome);
 // Inventory routes
-app.use("/inv", inventoryRoute);
-// Account routes
-app.use("/account", accountRoute);
+app.use("/inv", require("./routes/inventoryRoute"));
 
-
-
+// Account route
+app.use("/account", require("./routes/accountRoute"));
+/* ***********************
+ * Local Server Information
+ * Values from .env (environment) file
+ *************************/
+const port = process.env.PORT;
+const host = process.env.HOST;
 
 // 404 Not Found Handler
 app.use(async (req, res, next) => {
@@ -85,13 +91,6 @@ app.use(async (err, req, res, next) => {
     nav,
   });
 });
-
-/* ***********************
- * Local Server Information
- * Values from .env (environment) file
- *************************/
-const port = process.env.PORT;
-const host = process.env.HOST;
 
 /* ***********************
  * Log statement to confirm server operation

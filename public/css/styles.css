@@ -197,7 +197,7 @@ login-box {
   padding: 30px;
   background: #fff;
   border-radius: 8px;
-  box-shadow: 0 0 12px rgba(0,0,0,0.15);
+  box-shadow: 0 0 12px rgba(0, 0, 0, 0.15);
 }
 
 h1 {
@@ -282,7 +282,7 @@ input {
 .register-wrapper {
   max-width: 450px;
   margin: 20px auto;
-  background: #d1ecf1;
+  /* background: #d1ecf1; */
   padding: 20px;
   border: 2px solid #333;
   border-radius: 6px;
@@ -322,6 +322,64 @@ input {
   cursor: pointer;
 }
 
+/* add-inventory.css */
+
+/* Main container for inventory add form */
+.inv-main {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 1rem;
+}
+
+/* Form labels */
+.inv-form-label {
+  display: block;
+  margin-top: 1rem;
+  font-weight: bold;
+}
+
+/* Form inputs and select */
+.inv-form-input,
+.inv-form-select {
+  width: 100%;
+  padding: 0.5rem;
+  margin-top: 0.25rem;
+  box-sizing: border-box;
+}
+
+/* Submit button */
+.inv-form-button {
+  margin-top: 1rem;
+  padding: 0.5rem 1rem;
+  background-color: #007bff;
+  color: #fff;
+  border: none;
+  cursor: pointer;
+}
+
+.inv-form-button:hover {
+  background-color: #0056b3;
+}
+
+/* Flash messages */
+.inv-flash-message {
+  background-color: #e0ffe0;
+  padding: 0.5rem;
+  margin-bottom: 1rem;
+  border: 1px solid #00a000;
+}
+
+/* Error messages */
+.inv-errors {
+  background-color: #ffe0e0;
+  padding: 0.5rem;
+  margin-bottom: 1rem;
+  border: 1px solid #a00000;
+}
+
+.inv-errors li {
+  margin-left: 1rem;
+}
 
 @media screen and (min-width: 38rem) {
   body {
