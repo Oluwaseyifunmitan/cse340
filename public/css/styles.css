@@ -1,7 +1,6 @@
-/******* Change Box Model ***************/
 *,
-*:before,
-*:after {
+*::before,
+*::after {
   box-sizing: border-box;
 }
 
@@ -10,28 +9,43 @@ header {
   justify-content: space-between;
   padding: 1rem;
 }
+
 header a {
   text-decoration: none;
-  color: black;
+  color: #000;
 }
+
 .siteName {
   font-size: 1.5rem;
   font-weight: bold;
 }
 
+/* ✅ FIXED NAV CONTRAST */
 nav {
-  color: white;
-  background-color: black;
+  background-color: #000;
 }
+
 nav ul {
   display: flex;
   justify-content: space-around;
   list-style: none;
   padding: 1rem;
+  margin: 0;
 }
+
+nav a {
+  color: #ffffff; /* ✅ HIGH CONTRAST */
+  font-weight: bold;
+  text-decoration: none;
+}
+
+nav a:hover {
+  text-decoration: underline;
+}
+
 h1 {
   font-size: 1.2rem;
-  margin: 0 0 1rem 0;
+  margin-bottom: 1rem;
 }
 
 main {
@@ -42,42 +56,34 @@ main {
   margin-bottom: 2rem;
 }
 
-.hero-img {
-  display: block;
-  width: 100%;
-  height: auto;
-}
-
 .product-text {
   position: absolute;
-  background-color: rgba(255, 255, 255, 0.9);
+  background-color: rgba(255, 255, 255, 0.95);
   border-radius: 4px;
   max-width: 200px;
   z-index: 1;
 }
 
 .highlight {
-  color: #00e5ff;
+  color: #0277bd; /* ✅ Darker blue for contrast */
   font-weight: bold;
-}
-h3 {
-  margin: 0;
 }
 
 .product-text ul {
   list-style: none;
-  padding-left: 0;
+  padding: 0;
   margin: 0;
 }
 
 .product-text li {
-  color: #00e5ff;
-  text-decoration: none;
+  color: #0277bd; /* ✅ Passed contrast */
 }
 
 .product-text img {
   width: 100px;
+  margin-top: 1rem;
 }
+
 .product-img {
   position: relative;
   top: 35px;
@@ -85,9 +91,6 @@ h3 {
   max-width: 200px;
 }
 
-.product-text img {
-  margin-top: 1rem;
-}
 .reviews ul {
   list-style-type: disc;
   padding-left: 1.5rem;
@@ -100,6 +103,7 @@ h3 {
 .upgrades h3 {
   margin-top: 2rem;
 }
+
 .upgrades-grid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
@@ -109,9 +113,14 @@ h3 {
 
 .upgrade-item {
   background-color: #4fc3f7;
-  border: 1px solid black;
-  padding: 1rem 3rem;
+  border: 1px solid #000;
+  padding: 1rem;
   text-align: center;
+}
+
+.upgrade-item a {
+  color: #000;
+  font-weight: bold;
 }
 
 .upgrade-item img {

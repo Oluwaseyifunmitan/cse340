@@ -2,26 +2,30 @@
   <h1>Add Inventory Item</h1>
 
   <!-- Flash messages -->
-  <% if (flash && flash.length > 0) { %>
-  <div class="flash-message">
-    <% flash.forEach(msg => { %>
-    <p><%= msg %></p>
-    <% }) %>
-  </div>
+  <% if (locals.flash && locals.flash.length > 0) { %>
+    <div class="flash-message">
+      <% flash.forEach(msg => { %>
+        <p class="notice"><%= msg %></p>
+      <% }) %>
+    </div>
   <% } %>
 
   <!-- Server-side validation errors -->
-  <% if (errors && errors.length > 0) { %>
-  <div class="error-messages">
-    <% errors.forEach(err => { %>
-    <p><%= err %></p>
-    <% }) %>
-  </div>
+  <% if (locals.errors && locals.errors.length > 0) { %>
+    <div class="error-messages">
+      <ul class="notice">
+        <% errors.forEach(err => { %>
+          <!-- FIX: Access the .msg property of the error object -->
+          <li><%= err.msg %></li>
+        <% }) %>
+      </ul>
+    </div>
   <% } %>
 
-  <form action="/inv/add-inventory" method="POST">
+  <form action="/inv/add-inventory" method="POST" id="add-inventory-form">
+    
     <label for="classificationList">Classification</label>
-    <%- classificationList %>
+    <%- classificationList %> 
     <!-- dynamically built dropdown -->
 
     <label for="inv_make">Make</label>
@@ -29,7 +33,7 @@
       type="text"
       name="inv_make"
       id="inv_make"
-      value="<%= formData.inv_make || '' %>"
+      value="<%= locals.formData ? formData.inv_make : '' %>"
       required
     />
 
@@ -38,25 +42,34 @@
       type="text"
       name="inv_model"
       id="inv_model"
-      value="<%= formData.inv_model || '' %>"
+      value="<%= locals.formData ? formData.inv_model : '' %>"
       required
     />
 
-    <label for="inv_year">Year</label>
+    <!-- FIX: Added Missing Description Field -->
+    <label for="inv_description">Description</label>
+    <textarea name="inv_description" id="inv_description" required rows="5"><%= locals.formData ? formData.inv_description : '' %></textarea>
+
+    <label for="inv_year">Year (4-digit)</label>
     <input
       type="number"
       name="inv_year"
       id="inv_year"
-      value="<%= formData.inv_year || '' %>"
+      min="1900"
+      max="2099"
+      value="<%= locals.formData ? formData.inv_year : '' %>"
       required
     />
 
     <label for="inv_price">Price</label>
+    <!-- FIX: Added step="0.01" to allow decimals -->
     <input
       type="number"
       name="inv_price"
       id="inv_price"
-      value="<%= formData.inv_price || '' %>"
+      step="0.01"
+      min="0"
+      value="<%= locals.formData ? formData.inv_price : '' %>"
       required
     />
 
@@ -65,7 +78,7 @@
       type="number"
       name="inv_miles"
       id="inv_miles"
-      value="<%= formData.inv_miles || '' %>"
+      value="<%= locals.formData ? formData.inv_miles : '' %>"
       required
     />
 
@@ -74,7 +87,7 @@
       type="text"
       name="inv_color"
       id="inv_color"
-      value="<%= formData.inv_color || '' %>"
+      value="<%= locals.formData ? formData.inv_color : '' %>"
       required
     />
 
@@ -83,7 +96,8 @@
       type="text"
       name="inv_image"
       id="inv_image"
-      value="<%= formData.inv_image || '/images/no-image.png' %>"
+      value="<%= (locals.formData && formData.inv_image) ? formData.inv_image : '/images/vehicles/no-image.png' %>"
+      required
     />
 
     <label for="inv_thumbnail">Thumbnail Path</label>
@@ -91,7 +105,8 @@
       type="text"
       name="inv_thumbnail"
       id="inv_thumbnail"
-      value="<%= formData.inv_thumbnail || '/images/no-image-thumbnail.png' %>"
+      value="<%= (locals.formData && formData.inv_thumbnail) ? formData.inv_thumbnail : '/images/vehicles/no-image-thumbnail.png' %>"
+      required
     />
 
     <button type="submit">Add Inventory</button>

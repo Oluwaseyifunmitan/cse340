@@ -6,27 +6,44 @@ const { validationResult } = require("express-validator");
 // Build inventory by classification view
 // ***************************
 async function buildByClassificationId(req, res, next) {
-  const classification_id = req.params.classificationId;
-  const data = await invModel.getInventoryByClassificationId(classification_id);
-  const grid = await utilities.buildClassificationGrid(data);
-  let nav = await utilities.getNav();
-  const className = data[0].classification_name;
+  try {
+    const classification_id = req.params.classificationId;
+    const data = await invModel.getInventoryByClassificationId(classification_id);
+    const grid = await utilities.buildClassificationGrid(data);
+    let nav = await utilities.getNav();
 
-  res.render("./inventory/classification", {
-    title: `${className} vehicles`,
-    nav,
-    grid,
-  });
+    // FIXED: Handle case where classification exists but has no vehicles
+    const className =
+      data.length > 0 ? data[0].classification_name : "Classification";
+
+    res.render("inventory/classification", {
+      title: `${className} vehicles`,
+      nav,
+      grid,
+    });
+  } catch (error) {
+    next(error);
+  }
 }
 
 // ***************************
 // Build vehicle detail view
 // ***************************
 async function buildDetailView(req, res, next) {
-  const invId = req.params.inv_id;
-
   try {
+    const invId = req.params.inv_id;
     const data = await invModel.getVehicleById(invId);
+
+    // FIXED: Handle invalid vehicle ID
+    if (!data) {
+      const nav = await utilities.getNav();
+      return res.status(404).render("errors/error", {
+        title: "Vehicle Not Found",
+        message: "Sorry, we could not find that vehicle.",
+        nav,
+      });
+    }
+
     const html = await utilities.buildVehicleDetailHtml(data);
     const nav = await utilities.getNav();
 
@@ -41,37 +58,48 @@ async function buildDetailView(req, res, next) {
 }
 
 // ***************************
-// Intentional error for Task 3
+// Intentional error
 // ***************************
 async function throwError(req, res, next) {
-  throw new Error("Intentional server error for testing.");
+  const error = new Error("Intentional server error for testing.");
+  error.status = 500;
+  next(error);
 }
 
 // ***************************
 // Management view
 // ***************************
 async function buildManagement(req, res, next) {
-  let nav = await utilities.getNav();
-  req.flash("notice", "Welcome to Inventory Management!");
+  try {
+    let nav = await utilities.getNav();
+    const flashMessage = req.flash("notice");
 
-  res.render("inventory/management", {
-    title: "Inventory Management",
-    nav,
-    flash: req.flash("notice"),
-  });
+    res.render("inventory/management", {
+      title: "Inventory Management",
+      nav,
+      flash: flashMessage,
+      errors: null,
+    });
+  } catch (error) {
+    next(error);
+  }
 }
 
 // ***************************
-// Add Classification Form
+// Build Add Classification Form
 // ***************************
 async function buildAddClassification(req, res, next) {
-  let nav = await utilities.getNav();
-  res.render("inventory/add-classification", {
-    title: "Add Classification",
-    nav,
-    flash: req.flash("notice"),
-    errors: null,
-  });
+  try {
+    let nav = await utilities.getNav();
+    res.render("inventory/add-classification", {
+      title: "Add Classification",
+      nav,
+      flash: req.flash("notice"),
+      errors: null,
+    });
+  } catch (error) {
+    next(error);
+  }
 }
 
 // ***************************
@@ -80,6 +108,7 @@ async function buildAddClassification(req, res, next) {
 async function addClassification(req, res, next) {
   const errors = validationResult(req);
 
+  // 1. Check for Validation Errors
   if (!errors.isEmpty()) {
     let nav = await utilities.getNav();
     return res.status(400).render("inventory/add-classification", {
@@ -87,21 +116,27 @@ async function addClassification(req, res, next) {
       nav,
       flash: req.flash("notice"),
       errors: errors.array(),
+      
     });
   }
 
   const { classification_name } = req.body;
 
   try {
+    // 2. Attempt Database Insert
     const result = await invModel.insertClassification(classification_name);
+
     if (result) {
-      await utilities.getNav(); // refresh nav
+      // 3. Success: Flash message and Redirect
+      // Note: We do NOT need to call getNav() here because the redirect 
+      // loads a new page (Management) which rebuilds the nav itself.
       req.flash(
         "notice",
         `Classification "${classification_name}" added successfully.`
       );
-      return res.redirect("/inv"); // back to management
+      return res.redirect("/inv");
     } else {
+      // 4. Database Failure: Reload form with error message
       let nav = await utilities.getNav();
       req.flash("notice", "Sorry, the classification could not be added.");
       return res.status(500).render("inventory/add-classification", {
@@ -117,19 +152,19 @@ async function addClassification(req, res, next) {
 }
 
 // ***************************
-// Add Inventory Form
+// Build Add Inventory Form
 // ***************************
 async function buildAddInventory(req, res, next) {
   try {
     const classificationList = await utilities.buildClassificationList();
-    const nav = await utilities.getNav();
+    const nav = await utilities.getNav(); 
 
     res.render("inventory/add-inventory", {
       title: "Add Inventory Item",
       classificationList,
       flash: req.flash("notice"),
       errors: null,
-      formData: {}, // sticky form
+      formData: {}, // Initialize empty formData
       nav,
     });
   } catch (error) {
@@ -141,6 +176,10 @@ async function buildAddInventory(req, res, next) {
 // Process Add Inventory
 // ***************************
 async function addInventory(req, res, next) {
+  // DEBUG: Check if data is reaching the controller
+  console.log("Add Inventory Controller Reached");
+  console.log("Form Data Received:", req.body);
+
   let {
     classification_id,
     inv_make,
@@ -154,39 +193,31 @@ async function addInventory(req, res, next) {
     inv_thumbnail,
   } = req.body;
 
-  // Set default images if not provided
-  inv_image = inv_image || "/images/no-image.png";
-  inv_thumbnail = inv_thumbnail || "/images/no-image-thumbnail.png";
+  // Set defaults for images if empty
+  inv_image = inv_image || "/images/vehicles/no-image.png";
+  inv_thumbnail = inv_thumbnail || "/images/vehicles/no-image-thumbnail.png";
 
-  try {
-    const classificationList = await utilities.buildClassificationList(
+  const errors = validationResult(req);
+
+  // DEBUG: Check if validation failed
+  if (!errors.isEmpty()) {
+    console.log("Validation Failed:", errors.array());
+    let nav = await utilities.getNav();
+    let classificationList = await utilities.buildClassificationList(
       classification_id
     );
+    return res.status(400).render("inventory/add-inventory", {
+      title: "Add Inventory Item",
+      nav,
+      classificationList,
+      errors: errors.array(),
+      formData: req.body,
+      flash: req.flash("notice"),
+    });
+  }
 
-    const errors = [];
-    if (!classification_id) errors.push("Classification is required");
-    if (!inv_make) errors.push("Make is required");
-    if (!inv_model) errors.push("Model is required");
-    if (!inv_year || isNaN(inv_year))
-      errors.push("Year is required and must be a number");
-    if (!inv_price || isNaN(inv_price))
-      errors.push("Price is required and must be a number");
-    if (!inv_miles || isNaN(inv_miles))
-      errors.push("Miles is required and must be a number");
-    if (!inv_color) errors.push("Color is required");
-
-    if (errors.length > 0) {
-      return res.status(400).render("inventory/add-inventory", {
-        title: "Add Inventory Item",
-        classificationList,
-        flash: req.flash("notice"),
-        errors,
-        formData: req.body,
-        nav: await utilities.getNav(),
-      });
-    }
-
-    const result = await invModel.addInventory({
+  try {
+    const result = await invModel.insertInventory({
       classification_id,
       inv_make,
       inv_model,
@@ -199,23 +230,32 @@ async function addInventory(req, res, next) {
       inv_thumbnail,
     });
 
+    // DEBUG: Check database result
+    console.log("DB Insert Result:", result);
+
     if (result) {
       req.flash(
         "notice",
-        `Inventory item "${inv_make} ${inv_model}" added successfully.`
+        `The ${inv_make} ${inv_model} was successfully added.`
       );
-      return res.status(201).redirect("/inv/");
+      return res.redirect("/inv/");
     } else {
+      req.flash("notice", "Sorry, the insert failed.");
+      let nav = await utilities.getNav();
+      let classificationList = await utilities.buildClassificationList(
+        classification_id
+      );
       return res.status(500).render("inventory/add-inventory", {
         title: "Add Inventory Item",
+        nav,
         classificationList,
-        flash: req.flash("notice", "Failed to add inventory item."),
-        errors: ["Database insertion failed"],
+        errors: null,
         formData: req.body,
-        nav: await utilities.getNav(),
+        flash: req.flash("notice"),
       });
     }
   } catch (error) {
+    console.error("Controller Try/Catch Error:", error);
     next(error);
   }
 }

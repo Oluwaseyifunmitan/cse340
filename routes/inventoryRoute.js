@@ -1,40 +1,37 @@
-// Needed Resources
+// routes/inventoryRoute.js
 const express = require("express");
-const router = express.Router();
+const router = new express.Router(); 
 const invController = require("../controllers/invController");
-const utilities = require("../utilities"); // 👈 Make sure this is added
-const regValidate = require("../utilities/inventory-validation");
-const { addClassificationRules } = require("../utilities/inventory-validation");
+const utilities = require("../utilities/");
+const invValidate = require("../utilities/inventory-validation");
 
 // Route to build inventory by classification view
-router.get(
-  "/type/:classificationId",
-  utilities.handleErrors(invController.buildByClassificationId)
-);
+router.get("/type/:classificationId", utilities.handleErrors(invController.buildByClassificationId));
 
 // Route to build vehicle detail view
-router.get(
-  "/detail/:inv_id",
-  utilities.handleErrors(invController.buildDetailView)
-);
+router.get("/detail/:inv_id", utilities.handleErrors(invController.buildDetailView));
 
-// Route to trigger intentional error for Task 3
-router.get("/cause-error", utilities.handleErrors(invController.throwError));
-
-// Management view delivery
-router.get("/", invController.buildManagement);
+// Route to build the "Add Inventory" form
+router.get("/add-inventory", utilities.handleErrors(invController.buildAddInventory));
 
 // Deliver the add classification form
 router.get("/add-classification", invController.buildAddClassification);
-
-// Process the add classification form
 router.post(
   "/add-classification",
-  regValidate.addClassificationRules(), // server-side validation middleware
-  invController.addClassification
+  invValidate.addClassificationRules(),
+  invValidate.checkClassificationData,
+  utilities.handleErrors(invController.addClassification)
+);
+// ✅ PROCESS THE ADD INVENTORY FORM
+// 1. Validate Rules -> 2. Check Data -> 3. Controller
+router.post(
+  "/add-inventory",
+  invValidate.addInventoryRules(),
+  invValidate.checkInventoryData,
+  utilities.handleErrors(invController.addInventory)
 );
 
-router.get("/add-inventory", invController.buildAddInventory);
-router.post("/add-inventory", invController.addInventory);
+// Route to build the management view
+router.get("/", utilities.handleErrors(invController.buildManagement));
 
 module.exports = router;

@@ -1,11 +1,21 @@
-<main>
-  <h1>Inventory Management</h1>
+<!-- views/inventory/management.ejs -->
 
-  <!-- Flash messages -->
-  <%- flash %>
+<div class="management-view">
+  <h1><%= title %></h1>
 
-  <ul>
-    <li><a href="/inv/add-classification">Add New Classification</a></li>
-    <li><a href="/inv/add-inventory">Add New Inventory Item</a></li>
-  </ul>
-</main>
+  <!-- ✅ FLASH MESSAGE BLOCK -->
+  <% if (flash && flash.length > 0) { %>
+    <div class="flash-message">
+        <% flash.forEach(function(msg) { %>
+            <p class="notice"><%= msg %></p>
+        <% }) %>
+    </div>
+  <% } %>
+
+  <div class="management-links">
+    <a href="/inv/add-classification">Add New Classification</a>
+    <br>
+    <a href="/inv/add-inventory">Add New Inventory Item</a>
+  </div>
+
+</div>
