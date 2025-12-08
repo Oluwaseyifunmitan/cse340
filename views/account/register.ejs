@@ -1,69 +1,55 @@
-<%- include("../partials/header") %>
-
-<main class="register-wrapper">
-
-  <!-- Page Title -->
-  <h1><%= title %></h1>
-
-  <!-- Flash Messages -->
-  <%- messages() %>
-
-  <form action="/account/register" method="post" class="register-form">
-
-    <!-- FIRST NAME -->
-    <label for="firstname">First name</label>
-    <input 
-      type="text" 
-      id="firstname" 
-      name="firstname" 
-      required 
-      value="<%= typeof firstname != 'undefined' ? firstname : '' %>"
-    />
-
-    <!-- LAST NAME -->
-    <label for="lastname">Last name</label>
-    <input 
-      type="text" 
-      id="lastname" 
-      name="lastname" 
-      required 
-      value="<%= typeof lastname != 'undefined' ? lastname : '' %>"
-    />
-
-    <!-- EMAIL -->
-    <label for="email">Email address</label>
-    <input 
-      type="email" 
-      id="email" 
-      name="email" 
-      required 
-      value="<%= typeof email != 'undefined' ? email : '' %>"
-    />
-
-    <!-- PASSWORD -->
-    <label for="password">Password</label>
-    <input 
-      type="password" 
-      id="password" 
-      name="password" 
-      required
-    />
-
-    <!-- Password rules text -->
-    <p class="password-rules">
-      Password must be at least 12 characters long, 
-      include 1 capital letter, 1 number, 
-      and 1 special character.
-    </p>
-
-    <!-- Show Password Button -->
-    <button type="button" id="toggle-password">Show Password</button>
-
-    <!-- Submit Button -->
+<% if (title) { %>
+<h1><%= title %></h1>
+<% } else { res.redirect('/') } %> <%- messages() %> <% if (errors) { %>
+<ul class="notice">
+  <% errors.array().forEach(error => { %>
+  <li><%= error.msg %></li>
+  <% }) %>
+</ul>
+<% } %>
+<div class="form-container">
+  <form action="/account/register" method="POST">
+    <div class="form-group">
+      <label for="first-name">First Name</label>
+      <input
+        type="text"
+        name="account_firstname"
+        id="accountFirstname"
+        required
+        value="<%= locals.account_firstname %>"
+      />
+    </div>
+    <div class="form-group">
+      <label for="last-name">Last Name</label>
+      <input
+        type="text"
+        name="account_lastname"
+        id="accountLastname"
+        required
+        value="<%= locals.account_lastname %>"
+      />
+    </div>
+    <div class="form-group">
+      <label for="email">Email</label>
+      <input
+        type="email"
+        name="account_email"
+        id="accountEmail"
+        required
+        value="<%= locals.account_email %>"
+      />
+    </div>
+    <div class="form-group">
+      <label for="password">Password</label>
+      <input
+        type="password"
+        id="password"
+        name="account_password"
+        pattern="(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#$%^&*])[A-Za-z0-9!@#$%^&*]{12,}"
+        title="Password must be at least 12 characters long, contain at least one capital letter, one number, and one special character"
+        required
+      />
+    </div>
     <button type="submit" class="submit-btn">Register</button>
-
   </form>
-
-</main>
-
-<script src="/js/togglePassword.js"></script>
+</div>

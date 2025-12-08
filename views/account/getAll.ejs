@@ -1,0 +1,21 @@
+<% if (title) { %>
+    <h1><%= title %></h1>
+    <% } else { res.redirect('/') } %> 
+    <%- messages() %> 
+    <% if (errors) { %>
+        <ul class="notice">
+          <% errors.array().forEach(error => { %>
+          <li><%= error.msg %></li>
+          <% }) %>
+        </ul> <% } %>
+   <%- accountsGrid %>
+   <div class="update-accountType">
+    <form action="/account/updateAccountType" method="POST">
+        <label for="accountEmail">Write Email of User</label>
+        <input type="email" id="accountEmail" name="account_email" required>
+        <label for="accountType">Update User's Account Type</label>
+        <input type="text" id="accountType" name="account_type" required>
+        <button type="submit">Update Account Type</button>
+       </form>
+   </div>
+   

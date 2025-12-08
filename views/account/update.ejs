@@ -1,0 +1,41 @@
+<% if (title) { %>
+    <h1><%= title %></h1>
+    <% } else { res.redirect('/') } %> 
+<%- messages() %> 
+<% if (errors) { %>
+    <ul class="notice">
+      <% errors.array().forEach(error => { %>
+      <li><%= error.msg %></li>
+      <% }) %>
+    </ul>
+    <% } %>
+  <section class="account-update">
+    <h2>Update Account Information</h2>
+    <form action="/account/update" method="POST">
+      <label for="firstname">First Name</label>
+      <input type="text" name="account_firstname" id="firstname" value="<%= locals.accountData.account_firstname %>" required />
+
+      <label for="lastname">Last Name</label>
+      <input type="text" name="account_lastname" id="lastname" value="<%= locals.accountData.account_lastname %>" required />
+
+      <label for="email">Email</label>
+      <input type="email" name="account_email" id="email" value="<%= locals.accountData.account_email %>" required />
+      <label for="account_id"></label>
+      <input type="hidden" id="account_id" name="account_id" value="<%= locals.accountData.account_id %>">
+
+      <button type="submit">Update Account</button>
+    </form>
+  </section>
+
+  <section class="change-password">
+    <h2>Change Password</h2>
+    <form action="/account/change-password" method="POST">
+      <label for="new-password">New Password</label>
+      <input type="password" name="account_password" id="new-password" required />
+      <label for="account_id"></label>
+      <input type="hidden" id="account_id" name="account_id" value="<%= locals.accountData.account_id %>">
+    
+      <button type="submit">Change Password</button>
+    </form>
+  </section>
+</main>
