@@ -1,0 +1,126 @@
+<% if (title) { %>
+    <h1><%= title %></h1>
+    <% } else { res.redirect('/') } %> 
+<%- messages() %> 
+<% if (errors) { %>
+    <ul class="notice">
+      <% errors.array().forEach(error => { %>
+      <li><%= error.msg %></li>
+      <% }) %>
+    </ul>
+    <% } %>
+    <div class="editInvContainer">
+      <form action="/inv/update" method="post" id="updateForm">
+        <div class="form-group">
+            <label for="classificationList">Vehicle Classification</label>
+            <%- classificationSelect %> 
+        </div>
+        
+        <div class="form-group">
+            <label for="invMake">Inventory Make</label>
+            <input
+                type="text"
+                name="inv_make"
+                id="invMake"
+                required
+                value="<%= locals.inv_make %>"
+            />
+        </div>
+
+        <div class="form-group">
+            <label for="invModel">Inventory Model</label>
+            <input
+                type="text"
+                name="inv_model"
+                id="invModel"
+                required
+                value="<%= locals.inv_model %>"
+            />
+        </div>
+
+        <div class="form-group">
+            <label for="invYear">Inventory Year</label>
+            <input
+                type="number"
+                name="inv_year"
+                id="invYear"
+                min="1900"
+                max="2099"
+                required
+                value="<%= locals.inv_year %>"
+            />
+        </div>
+
+        <div class="form-group">
+            <label for="invDescription">Inventory Description</label>
+            <textarea
+                name="inv_description"
+                id="invDescription"
+                required
+            ><%= locals.inv_description %></textarea>
+        </div>
+
+        <div class="form-group">
+            <label for="invImage">Inventory Image Path</label>
+            <input
+                type="text"
+                name="inv_image"
+                id="invImage"
+                required
+                value="<%= locals.inv_image %>"
+            />
+        </div>
+
+        <div class="form-group">
+            <label for="invThumbnail">Inventory Thumbnail Path</label>
+            <input
+                type="text"
+                name="inv_thumbnail"
+                id="invThumbnail"
+                required
+                value="<%= locals.inv_thumbnail %>"
+            />
+        </div>
+
+        <div class="form-group">
+            <label for="invPrice">Inventory Price</label>
+            <input
+                type="number"
+                name="inv_price"
+                id="invPrice"
+                step="0.01"
+                required
+                value="<%= locals.inv_price %>"
+            />
+        </div>
+
+        <div class="form-group">
+            <label for="invMiles">Inventory Miles</label>
+            <input
+                type="number"
+                name="inv_miles"
+                id="invMiles"
+                required
+                value="<%= locals.inv_miles %>"
+            />
+        </div>
+
+        <div class="form-group">
+            <label for="invColor">Inventory Color</label>
+            <input
+                type="text"
+                name="inv_color"
+                id="invColor"
+                required
+                value="<%= locals.inv_color %>"
+            />
+        </div>
+    
+        <button type="submit" disabled>Update Vehicle</button>
+        <input type="hidden" name="inv_id"
+<% if(locals.inv_id) { %> value="<%= locals.inv_id %>"
+<% } %>>
+      </form>
+      <script defer src="../../js/inv_update.js"></script>
+    </div>
+    

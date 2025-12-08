@@ -1,0 +1,135 @@
+<% if (title) { %>
+    <h1><%= title %></h1>
+    <% } else { res.redirect('/') } %> 
+<%- messages() %> 
+<% if (errors) { %>
+    <ul class="notice">
+      <% errors.array().forEach(error => { %>
+      <li><%= error.msg %></li>
+      <% }) %>
+    </ul>
+    <% } %>
+    <div class="deleteInvContainer">
+        <p>Confirm Deletion - The delete is permanent.</p>
+      <form action="/inv/delete" method="post" id="deleteForm">
+        <div class="form-group">
+            <label for="classificationList">Vehicle Classification</label>
+            <%- classificationSelect %> 
+        </div>
+        
+        <div class="form-group">
+            <label for="invMake">Inventory Make</label>
+            <input
+                type="text"
+                name="inv_make"
+                id="invMake"
+                required
+                value="<%= locals.inv_make %>"
+                readonly
+            />
+        </div>
+
+        <div class="form-group">
+            <label for="invModel">Inventory Model</label>
+            <input
+                type="text"
+                name="inv_model"
+                id="invModel"
+                required
+                value="<%= locals.inv_model %>"
+                readonly
+            />
+        </div>
+
+        <div class="form-group">
+            <label for="invYear">Inventory Year</label>
+            <input
+                type="number"
+                name="inv_year"
+                id="invYear"
+                min="1900"
+                max="2099"
+                required
+                value="<%= locals.inv_year %>"
+                readonly
+            />
+        </div>
+
+        <div class="form-group">
+            <label for="invDescription">Inventory Description</label>
+            <textarea
+                name="inv_description"
+                id="invDescription"
+                readonly
+                required
+            ><%= locals.inv_description %></textarea>
+        </div>
+
+        <div class="form-group">
+            <label for="invImage">Inventory Image Path</label>
+            <input
+                type="text"
+                name="inv_image"
+                id="invImage"
+                readonly
+                required
+                value="<%= locals.inv_image %>"
+            />
+        </div>
+
+        <div class="form-group">
+            <label for="invThumbnail">Inventory Thumbnail Path</label>
+            <input
+                type="text"
+                name="inv_thumbnail"
+                id="invThumbnail"
+                required
+                readonly
+                value="<%= locals.inv_thumbnail %>"
+            />
+        </div>
+
+        <div class="form-group">
+            <label for="invPrice">Inventory Price</label>
+            <input
+                type="number"
+                name="inv_price"
+                id="invPrice"
+                step="0.01"
+                readonly
+                required
+                value="<%= locals.inv_price %>"
+            />
+        </div>
+
+        <div class="form-group">
+            <label for="invMiles">Inventory Miles</label>
+            <input
+                type="number"
+                name="inv_miles"
+                id="invMiles"
+                readonly
+                required
+                value="<%= locals.inv_miles %>"
+            />
+        </div>
+
+        <div class="form-group">
+            <label for="invColor">Inventory Color</label>
+            <input
+                type="text"
+                name="inv_color"
+                id="invColor"
+                readonly
+                required
+                value="<%= locals.inv_color %>"
+            />
+        </div>
+    
+        <button type="submit">Delete Vehicle</button>
+        <input type="hidden" name="inv_id"
+<% if(locals.inv_id) { %> value="<%= locals.inv_id %>"
+<% } %>>
+      </form>
+    </div>
+    
